@@ -1,0 +1,63 @@
+<div id="dashboard2" class="row">
+	<div class="col-md-12">
+		<table id="dashboard-table" border="1">
+			<thead bgcolor="red">
+				<tr>
+					<th rowspan="3">Area</th>
+					<th rowspan="3">Total Inputan HI</th>
+					<th rowspan="3">Total Inputan Masuk MS2N</th>
+					<th colspan="3">Provision Issued</th>
+					<th rowspan="3">Activation Completed</th>
+				</tr>
+				<tr>
+					<th rowspan="2">HI > </th>
+					<th rowspan="2">HI</th>
+					<th rowspan="2">Grand Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% if @sto == nil %>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				<% else %>
+					<% @sto.each do |datel|%>
+					<tr>
+						<% case datel %>
+						<% when ['KKN','KKP','PLK','PPS','PYM'] %>
+						<td bgcolor="orange"> PLK </td>
+						<% when ['KMI','SUA','PBU'] %>
+						<td bgcolor="orange"> PBU </td>
+						<% when ['KPB','SAI'] %>
+						<td bgcolor="orange"> SAI </td>
+						<% when ['AMP','PRC','BNT','TML','MTW'] %>
+						<td bgcolor="orange"> MTW </td>
+						<% when ['KKN','KKP','PLK','PPS','PYM','KMI','SUA','PBU','KPB','SAI','AMP','PRC','BNT','TML','MTW'] %>
+						<td bgcolor="lightblue"> TOTAL </td>
+						<% else %>			
+						<td><%= datel %></td>
+						<% end %>
+						<td><%= link_to Order.where(orderdate: Date.today).where(sto: datel).where.not("status in ('CANCEL COMPLETED','Cancel Order')").count, download_url(format: "xls", query: "totalInputHI", datel: datel) %></td>
+
+						<td><%= link_to Order.where(orderdate: Date.today).where(sto: datel).where(status_va: "VA").count, download_url(format: "xls", query: "totalInputMS2NHI", datel: datel) %></td>
+
+						<td><%= link_to Order.where.not(orderdate: Date.today).where(sto: datel).where(status_va: "VA").where(status: "Process OSS (Provision Issued)").count, download_url(format: "xls", query: "PI>HI", datel: datel) %></td>
+
+						<td><%= link_to Order.where(orderdate: Date.today).where(sto: datel).where(status_va: "VA").where(status: "Process OSS (Provision Issued)").count, download_url(format: "xls", query: "PIHI", datel: datel) %></td>
+
+						<td><%= link_to Order.where(sto: datel).where(status_va: "VA").where(status: "Process OSS (Provision Issued)").count, download_url(format: "xls", query: "grandTotal", datel: datel) %></td>
+
+						<td><%= link_to Order.where(sto: datel).where(status_va: "VA").where(status: "Process OSS (Activation Completed)").count, download_url(format: "xls", query: "AC", datel: datel) %></td>
+					</tr>
+					<% end %>
+				<% end %>
+			</tbody>
+		</table>
+	</div>	
+</div>

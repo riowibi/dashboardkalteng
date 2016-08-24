@@ -1,0 +1,17 @@
+<div id="dashboard1" class="row">
+	<% @statuses.each do |status| %>
+		<div class="col-md-4">
+			<div>
+				<p>
+					<span>
+						<%= status %><br>					
+					</span>
+					<span>
+						3P: <%= Order.where(status: status).where(status_va: "VA").count %><br>
+						Non 3P: <%= Order.where(status: status).where(status_va: nil).count %>
+					</span>
+				</p>
+			</div>
+		</div>	
+	<% end %>
+</div>
